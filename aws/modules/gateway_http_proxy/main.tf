@@ -10,44 +10,26 @@ resource "aws_apigatewayv2_api" "api" {
   protocol_type = "HTTP"
 }
 
-resource "aws_apigatewayv2_integration" "api" {
-  api_id           = aws_apigatewayv2_api.api.id
-  integration_type = "HTTP_PROXY"
-
-  integration_method = "ANY"
-  integration_uri    = "http://${var.lb_dns_name}"
+module "proxy_integration" {
+  source = "../../components/api_gateway/api_integrations_proxy"
+  lb_dns_name = var.lb_dns_name
+  api_gateway_id = aws_apigatewayv2_api.api.id
 }
 
-resource "aws_apigatewayv2_route" "api" {
-  api_id    = aws_apigatewayv2_api.api.id
-  route_key = "ANY /"
+module "creating_routes" {
+  source = "../../components/api_gateway/routes"
+  api_integration_id = module.proxy_integration.api_integration_id
+  api_gateway_id = aws_apigatewayv2_api.api.id
 
-  target = "integrations/${aws_apigatewayv2_integration.api.id}"
+  depends_on = [module.proxy_integration]
 }
 
-resource "aws_apigatewayv2_route" "default" {
-  api_id    = aws_apigatewayv2_api.api.id
-  route_key = "$default"
+module "stage_deploy" {
+  source = "../../components/api_gateway/stage_deploy"
+  api_gw_id = aws_apigatewayv2_api.api.id
 
-  target = "integrations/${aws_apigatewayv2_integration.api.id}"
-}
-
-
-# resource "aws_apigatewayv2_deployment" "api" {
-#   api_id      = aws_apigatewayv2_route.api.api_id
-#   description = "Example"
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
-resource "aws_apigatewayv2_stage" "api" {
-  api_id = aws_apigatewayv2_api.api.id
-  name   = "$default"
-  auto_deploy = true
-
-}
+  depends_on = [module.creating_routes]
+} 
 
 output "https_endpoint"{
     value = aws_apigatewayv2_api.api.api_endpoint

@@ -1,0 +1,107 @@
+{
+  "region": "us-east-2",
+  "az1": "us-east-2a",
+  "az2": "us-east-2b",
+  "enable-deletion-protection": false,
+  "client": "interview",
+  "env": "dev",
+  "vpn-ip": "10.0.0.0/32",
+  "access_id": "",
+  "access_key": "",
+  "docker_server": "cr8kdevseasia01.azurecr.io",
+  "docker_username": "cr8kdevseasia01",
+  "docker_password": "",
+  "aws_account_id": "",
+  "appowner": "madstackplatform@madstreetden.com",
+  "environment": "",
+  "deployment-id": "",
+  "vpc_id": "",
+  "gateway_id": "",
+  "vpc-name": "msd-vpc-aws",
+  "vpc_create": "true",
+  "madstack-keypair-name": "kp",
+  "search-record-blog": "search",
+  "api-record-blog": "api",
+  "notify-record-blog": "notify",
+  "logs-record-blog": "log",
+  "xblox-kibana-record-blog": "mlaas-logs",
+  "monitor-record-blog": "monitor",
+  "cd-record-blog": "cd",
+  "cidrange": "13.0.0.0/16",
+  "vpn_dns_server": "13.0.0.2",
+  "public-subnet-1-block": "13.0.0.0/24",
+  "public-subnet-2-block": "13.0.1.0/24",
+
+  "private-subnet-1-block" : "13.0.11.0/24",
+  "private-subnet-2-block" : "13.0.12.0/24",
+  
+  
+
+
+  "elasticache-node-type": "cache.t3.medium",
+  "msk-instance-type": "kafka.t3.small",
+  "msk-instance-type-xblox": "kafka.t3.small",
+  "xblox-es-instance-type": "t3.small.elasticsearch",
+  "es-instance-type": "t3.small.elasticsearch",
+  "msd-orch-instance-type": [
+    "t3.medium"
+  ],
+  "msd-registry-instance-type": [
+    "t3.medium"
+  ],
+  "monitoring-instance-type": [
+    "t3.medium"
+  ],
+  "xblox-instance-type": [
+    "t3.medium"
+  ],
+  "xblox-gpu-instance-type": [
+    "g4dn.xlarge"
+  ],
+  "batman-instance-type": [
+    "r5a.2xlarge"
+  ],
+  "senseblox-instance-type": [
+    "t3.medium"
+  ],
+  "logstash-instance-type": [
+    "m5.xlarge"
+  ],
+  "elk-disk-size": "150",
+  "solr-disk-size": "150",
+  "public_subnet1_create": "true",
+  "public_subnet2_create": "true",
+  "private_subnet1_create":"true",
+  "private_subnet2_create":"true",
+
+
+
+  "instance_subnet2_create": "true",
+  "instance_subnet1_create": "true",
+  "eks_subnet1_create": "true",
+  "eks_subnet2_create": "true",
+  "inventory_subnet1_create": "true",
+  "inventory_subnet2_create": "true",
+  "msk_subnet1_create": "true",
+  "msk_subnet2_create": "true",
+  "enable-vpn": true,
+  "enable-cloudwatch": true,
+  "enable_cache_backup": "true",
+  "initvm-log-s3": "iac-madstack",
+  "redshift-username": "madstackuser",
+  "redshift-database-name": "madstack",
+  "enable-vpc-logs": true,
+  "enable-alb-logs": true,
+  "enable_eks_logging": "true",
+  "enable_es_logging": "true",
+  "enable_rds_logging": "true",
+  "aws_backup_enabled": "true",
+  "es-master-enabled": true,
+  "es-master-type": "t3.small.elasticsearch",
+  "es-master-count": 3,
+  "es-warm-enabled": false,
+  "es-warm-count": 3,
+  "es-warm-type": "ultrawarm1.medium.elasticsearch",
+  "redshift-tablename": "trell.videosmetadata",
+  "container-image-id" : "974638887567.dkr.ecr.us-east-2.amazonaws.com/task-test:latest"
+}

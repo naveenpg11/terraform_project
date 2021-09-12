@@ -13,42 +13,24 @@ variable "private_subnet_1_id" {
 variable "private_subnet_2_id" {
   description = "Enter private_subnet_2_id"
 }
-variable "client" {
-  description = "Enter client"
-}
+
 variable "env" {
   description = "Enter env"
 }
 variable "locationcode" {
   description = "Enter locationcode"
 }
-variable "appowner" {
-  description = "Enter appowner"
-}
-variable "environment" {
-  description = "Enter environment"
-}
-variable "deployment-id" {
+
+variable "deployment_id" {
   description = "Enter deployment-id"
-}
-variable "region" {
-  description = "Enter region"
 }
 variable "enable-deletion-protection" {
   description = "Enter enable-deletion-protection True/ False"
 }
-variable "aws_account_id" {
-  description = "Enter aws_account_id"
-}
+
 variable "enable-alb-logs" {
   description = "Enter enable-alb-logs True/False"
 }
-
-
-
-
-
-
 
 variable "tg-port" {
   default = 8000
@@ -160,4 +142,19 @@ variable "alb-approle" {
 variable "alb-sg-approle" {
   description = "Application Role"
   default     = "Security Group"
+}
+
+
+
+
+
+
+
+variable "created_by"{
+    description = "Pls specify the user"
+    default = "unknown"
+}
+
+variable "app_module"{
+    default = "load_balancer"
 }

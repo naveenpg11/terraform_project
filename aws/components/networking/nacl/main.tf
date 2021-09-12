@@ -19,14 +19,7 @@ resource "aws_network_acl" "dev-nacl" {
     cidr_block = "0.0.0.0/0"
   }
 
-  tags = {
-    "Name"              = var.nacl-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 output "nacl_id" {

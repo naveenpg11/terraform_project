@@ -16,15 +16,6 @@ variable "public-subnets" {
   type        = list(any)
   description = "List of Public Subnet IDs"
 }
-
-variable "appname" {
-  description = "Application"
-}
-
-variable "appowner" {
-  description = "Application Owner"
-}
-
 variable "s3-name" {
   description = "S3 for access logs"
 }
@@ -34,18 +25,13 @@ variable "access-logs-enabled" {
 }
 
 
-variable "environment" {
-  description = "Environment"
-}
-
-variable "approle" {
-  description = "Application Role"
-}
-
-variable "deployment-id" {
-  description = "Deployment id"
-}
-
 variable "enable-deletion-protection" {
   description = "Deletion Protection"
+}
+
+
+variable "tags" {
+  default = {
+   "Created_By" = "Terraform"
+  }
 }

@@ -1,46 +1,25 @@
+locals {
 
-resource "aws_apigatewayv2_api" "api" {
-  name          = "example-http-api-private"
-  protocol_type = "HTTP"
+api_gatewayname = format("%s-%s-%s-%s-%s",var.deployment_id, "api-gw",var.env, var.locationcode, "01")
+security-group-name = format("%s-%s-%s-%s-%s",var.deployment_id, "apigw-sg",var.env, var.locationcode, "01")
+
+default_tags ={
+  createdBy = var.created_by
+  app_module = var.app_module
+}
 }
 
-# resource "aws_security_group" "api-gw-sg" {
-#   name        = "allow-all-api"
-#   description = "allow all"
-#   vpc_id      = var.vpc_id
-#   ingress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
 
-
-locals {
-appname =  "appname"
-appowner =  "naveen"
-environment = "dev"
-deployment-id = "asdad"
-approle = "vsd"
-security-group-name = "vpc_link_sg"
+resource "aws_apigatewayv2_api" "api" {
+  name          = local.api_gatewayname
+  protocol_type = "HTTP"
 }
 
 module "vpc_link_sg_ecs" {
   source              = "../../components/networking/security_group"
   security-group-name = local.security-group-name
   vpc_id              = var.vpc_id
-  appname             = local.appname
-  appowner            = local.appowner
-  environment         = local.environment
-  deployment-id       = local.deployment-id
-  approle             = local.approle
+  tags                = local.default_tags
 }
 
 module "vpc_link_sg_rule" {

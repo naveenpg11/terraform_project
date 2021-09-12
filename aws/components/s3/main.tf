@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "msd_bucket" {
-  bucket = var.bucket-name
+  bucket = var.bucket_name
   acl    = "private"
 
   server_side_encryption_configuration {
@@ -13,14 +13,7 @@ resource "aws_s3_bucket" "msd_bucket" {
   policy        = var.policy
   force_destroy = var.enable-deletion-protection ? false : true
 
-  tags = {
-    "Name"              = var.bucket-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 output "s3_name" {

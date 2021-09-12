@@ -6,14 +6,7 @@ resource "aws_route_table" "dev-public-rt-1" {
     gateway_id = var.internet-gateway-id
   }
 
-  tags = {
-    "Name"              = var.public-route-table-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 output "route_table_id" {

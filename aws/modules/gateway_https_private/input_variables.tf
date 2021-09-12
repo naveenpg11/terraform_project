@@ -13,7 +13,27 @@ variable "private_subnet_2_id" {
     default = "subnet-02e5661f4e6b85c6d"
 }
 
+variable "created_by"{
+    description = "Pls specify the user"
+    default = "unknown"
+}
+
+variable "app_module"{
+    default = "gateway_https_private"
+}
 
 # variable  {
 #     default = "interview-alb-bi-dev-use2-01-576085688.us-east-2.elb.amazonaws.com"
 # }
+
+variable "locationcode" {
+  description = "Enter locationcode"
+}
+
+variable "env" {
+  description = "Enter env"
+}
+
+variable "deployment_id" {
+  description = "Enter deployment-id"
+}

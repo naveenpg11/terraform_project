@@ -46,23 +46,8 @@ variable "health-check-interval" {
 variable "health-check-matcher" {
   description = "Health Check Matcher"
 }
-
-variable "appname" {
-  description = "Application"
-}
-
-variable "appowner" {
-  description = "Application Owner"
-}
-
-variable "environment" {
-  description = "Environment"
-}
-
-variable "approle" {
-  description = "Application Role"
-}
-
-variable "deployment-id" {
-  description = "Deployment id"
+variable "tags" {
+  default = {
+   "Created_By" = "Terraform"
+  }
 }

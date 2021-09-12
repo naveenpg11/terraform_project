@@ -1,8 +1,13 @@
 locals {
-  alb-security-group-name = format("%s-%s-%s-%s", "alb-sg", var.env, var.locationcode, "01")
-  alb-name                = format("%s-%s-%s-%s", "alb", var.env, var.locationcode, "01")
-  log_2_name              = format("%s-%s-%s-%s", "alb-logs", var.env, var.locationcode, "01")
-  target-group-name       = format("%s-%s-%s-%s", "tg", var.env, var.locationcode, "01")
+  alb-security-group-name = format("%s-%s-%s-%s-%s", var.deployment_id, "alb-sg", var.env, var.locationcode, "01")
+  alb-name                = format("%s-%s-%s-%s-%s", var.deployment_id, "alb", var.env, var.locationcode, "01")
+  log_2_name              = format("%s-%s-%s-%s-%s", var.deployment_id,"alb-logs", var.env, var.locationcode, "01")
+  target-group-name       = format("%s-%s-%s-%s-%s", var.deployment_id,"tg", var.env, var.locationcode, "01")
+  
+  default_tags = {
+  createdBy = var.created_by
+  app_module = var.app_module
+}
 }
 
 #creating bucket alb logs 
@@ -11,13 +16,10 @@ data "aws_elb_service_account" "main" {}
 
 module "logs_alb_bucket" {
   source                     = "../../components/s3"
-  bucket-name                = local.log_2_name
-  appname                    = "lb"
-  appowner                   = var.appowner
-  environment                = var.environment
-  approle                    = var.approle
-  deployment-id              = var.deployment-id
   enable-deletion-protection = var.enable-deletion-protection
+  bucket_name = local.log_2_name
+
+  tags = local.default_tags
 
   policy = <<POLICY
 {
@@ -46,11 +48,7 @@ module "alb-sg" {
   source              = "../../components/networking/security_group"
   security-group-name = local.alb-security-group-name
   vpc_id              = var.vpc_id
-  appname             = var.alb-appname
-  appowner            = var.appowner
-  environment         = var.environment
-  deployment-id       = var.deployment-id
-  approle             = var.alb-sg-approle
+  tags = local.default_tags
 }
 
 module "sg_rule_http_alb" {
@@ -71,11 +69,7 @@ module "alb" {
   internal                   = true
   security-group             = [module.alb-sg.security_group_id]
   public-subnets             = [var.private_subnet_1_id, var.private_subnet_2_id]
-  appname                    = var.alb-appname
-  appowner                   = var.appowner
-  environment                = var.environment
-  deployment-id              = var.deployment-id
-  approle                    = var.alb-approle
+  tags                      = local.default_tags
   enable-deletion-protection = var.enable-deletion-protection
   s3-name                    = module.logs_alb_bucket.s3_name
   access-logs-enabled        = var.enable-alb-logs
@@ -97,11 +91,7 @@ module "target_group" {
   health-check-interval = var.health-check-interval
   health-check-matcher  = var.health-check-matcher
 
-  appname               = var.tg-appname
-  appowner              = var.appowner
-  environment           = var.environment
-  deployment-id         = var.deployment-id
-  approle               = var.tg-approle
+  tags = local.default_tags
 }
 
 

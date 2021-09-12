@@ -6,14 +6,7 @@ resource "aws_route_table" "dev-private-rt-1" {
     nat_gateway_id = var.nat-gateway-id
   }
 
-  tags = {
-    "Name"              = var.private-route-table-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 

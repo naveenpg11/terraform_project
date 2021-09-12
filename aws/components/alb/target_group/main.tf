@@ -16,14 +16,7 @@ resource "aws_lb_target_group" "dev-tg" {
     matcher             = var.health-check-matcher
   }
 
-  tags = {
-    "Name"              = var.target-group-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 

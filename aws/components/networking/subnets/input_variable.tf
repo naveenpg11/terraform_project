@@ -20,6 +20,3 @@ variable "map-public-ip-on-launch" {
   description = "Map Public IP on Launch"
 }
 
-variable "subnet_create"{
-  description = "Enter existing subnet id or 'true' to create a new subnet"
-}

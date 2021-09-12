@@ -1,5 +1,4 @@
 resource "aws_subnet" "dev-subnet" {
-  count = var.subnet_create == "true" ? 1 : 0
   vpc_id                  = var.vpc_id
   cidr_block              = var.subnet-block
   availability_zone       = var.az
@@ -9,5 +8,5 @@ resource "aws_subnet" "dev-subnet" {
 }
 
 output "subnet_id" {
-  value = var.subnet_create == "true" ? aws_subnet.dev-subnet[0].id : var.subnet_create
+  value = aws_subnet.dev-subnet.id 
 }

@@ -10,14 +10,7 @@ resource "aws_nat_gateway" "dev-nat-gw-1" {
   allocation_id = aws_eip.dev-eip.id
   subnet_id     = var.subnet-id
 
-  tags = {
-    "Name"              = var.nat-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 output "nat-id" {

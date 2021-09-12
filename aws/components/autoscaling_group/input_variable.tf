@@ -22,4 +22,8 @@ variable "private_subnet_2_id" {
     description = "private_subnet_2_id"
   }
   
-  
+variable "tags" {
+  default = {
+   "Created_By" = "Terraform"
+  }
+}

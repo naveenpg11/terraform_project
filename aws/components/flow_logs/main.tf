@@ -4,12 +4,5 @@ resource "aws_flow_log" "example" {
   traffic_type         = var.traffic-type
   vpc_id               = var.vpc-id
 
-  tags = {
-    "Name"              = var.flow-log-name
-    "Application"  = var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }

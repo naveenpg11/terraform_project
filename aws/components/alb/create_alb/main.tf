@@ -11,14 +11,7 @@ resource "aws_lb" "alb" {
     enabled = var.access-logs-enabled
   }
 
-  tags = {
-    "Name"              = var.alb-name
-    "Application"  =  var.appname
-    "Application Owner" = var.appowner
-    "Environment"       = var.environment
-    "Application Role"  = var.approle
-    "Deployment id"     = var.deployment-id
-  }
+  tags = var.tags
 }
 
 output "lb-arn" {

@@ -1,6 +1,7 @@
 resource "aws_lb" "alb" {
   name               = var.alb-name
   load_balancer_type = "application"
+  internal           = var.internal
   security_groups    = var.security-group
   subnets            = var.public-subnets
 
@@ -12,7 +13,7 @@ resource "aws_lb" "alb" {
 
   tags = {
     "Name"              = var.alb-name
-    "Application"  = var.appname
+    "Application"  =  var.appname
     "Application Owner" = var.appowner
     "Environment"       = var.environment
     "Application Role"  = var.approle

@@ -17,7 +17,9 @@ variable "private_subnet_2_id" {
 }
 
 
-
+variable "vpc_cidr_block" {
+  description = "vpc cidr block"
+}
 
 
 variable "vpc_id" {

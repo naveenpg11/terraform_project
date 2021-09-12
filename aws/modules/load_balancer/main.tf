@@ -1,8 +1,8 @@
 locals {
-  alb-security-group-name = format("%s-%s-%s-%s-%s-%s", var.client, var.alb-security-group-name, var.alb-appcode, var.env, var.locationcode, "01")
-  alb-name                = format("%s-%s-%s-%s-%s-%s", var.client, var.alb-name, var.appcode, var.env, var.locationcode, "01")
-  log_2_name              = format("%s-%s-%s-%s-%s-%s", var.client, "alb", "logs", var.env, var.locationcode, "01")
-  target-group-name = format("%s-%s-%s-%s-%s-%s", var.client, var.alb-name, "tg", var.env, var.locationcode, "01")
+  alb-security-group-name = format("%s-%s-%s-%s", "alb-sg", var.env, var.locationcode, "01")
+  alb-name                = format("%s-%s-%s-%s", "alb", var.env, var.locationcode, "01")
+  log_2_name              = format("%s-%s-%s-%s", "alb-logs", var.env, var.locationcode, "01")
+  target-group-name       = format("%s-%s-%s-%s", "tg", var.env, var.locationcode, "01")
 }
 
 #creating bucket alb logs 
@@ -10,9 +10,9 @@ locals {
 data "aws_elb_service_account" "main" {}
 
 module "logs_alb_bucket" {
-  source                     = "../../../components/s3"
+  source                     = "../../components/s3"
   bucket-name                = local.log_2_name
-  appname                    = var.appname
+  appname                    = "lb"
   appowner                   = var.appowner
   environment                = var.environment
   approle                    = var.approle
@@ -43,9 +43,9 @@ POLICY
 
 
 module "alb-sg" {
-  source              = "../../../components/networking/security_group"
+  source              = "../../components/networking/security_group"
   security-group-name = local.alb-security-group-name
-  vpc_id              = local.vpc-id
+  vpc_id              = var.vpc_id
   appname             = var.alb-appname
   appowner            = var.appowner
   environment         = var.environment
@@ -54,22 +54,23 @@ module "alb-sg" {
 }
 
 module "sg_rule_http_alb" {
-  source            = "../../../components/networking/security_group_rules"
+  source            = "../../components/networking/security_group_rules"
   type              = "ingress"
   from-port         = 80
   to-port           = 80
-  protocol          = "tcp"
+  protocol          = "-1"
   cidr-blocks       = ["0.0.0.0/0"]
   security-group-id = module.alb-sg.security_group_id
-  description       = "ELK"
+  description       = "InternalLoadBalancerSGRule"
 }
 
 
 module "alb" {
-  source                     = "../../../components/alb/create_alb"
+  source                     = "../../components/alb/create_alb"
   alb-name                   = local.alb-name
-  security-group             = [module.alb-sg.security_group_id, module.vpn-security-group.security_group_id]
-  public-subnets             = [module.public_subnet_1.subnet_id, module.public_subnet_2.subnet_id]
+  internal                   = true
+  security-group             = [module.alb-sg.security_group_id]
+  public-subnets             = [var.private_subnet_1_id, var.private_subnet_2_id]
   appname                    = var.alb-appname
   appowner                   = var.appowner
   environment                = var.environment
@@ -82,11 +83,11 @@ module "alb" {
 
 
 module "target_group" {
-  source                = "../../../components/alb/target_group"
+  source                = "../../components/alb/target_group"
   target-group-name     = local.target-group-name
   port                  = var.tg-port
   protocol              = var.tg-protocol
-  vpc-id                = local.vpc-id
+  vpc-id                = var.vpc_id
   health-check-protocol = var.health-check-protocol
   health-check-path     = var.health-check-path
   health-check-port     = var.health-check-port
@@ -105,7 +106,7 @@ module "target_group" {
 
 
 module "alb-listener" {
-  source           = "../../../components/alb/listener"
+  source           = "../../components/alb/listener"
   lb-arn           = module.alb.lb-arn
   port             = var.listener-port
   protocol         = var.listener-protocol

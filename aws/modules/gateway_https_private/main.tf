@@ -1,48 +1,63 @@
-# locals{
-
-#     route_key_local  = format("%s%s", "ANY http://",var.lb_dns_name,"/")
-
-# }
-
 
 resource "aws_apigatewayv2_api" "api" {
   name          = "example-http-api-private"
   protocol_type = "HTTP"
 }
 
-# resource "aws_apigatewayv2_integration" "api" {
-#   api_id           = aws_apigatewayv2_api.api.id
-#   integration_type = "HTTP_PROXY"
-
-#   integration_method = "ANY"
-#   integration_uri    = "http://${var.lb_dns_name}"
+# resource "aws_security_group" "api-gw-sg" {
+#   name        = "allow-all-api"
+#   description = "allow all"
+#   vpc_id      = var.vpc_id
+#   ingress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 # }
 
-################## VPC LINK / And its integrations
 
-resource "aws_security_group" "api-gw-sg" {
-  name        = "allow-all-api"
-  description = "allow all"
-  vpc_id      = var.vpc_id
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+locals {
+appname =  "appname"
+appowner =  "naveen"
+environment = "dev"
+deployment-id = "asdad"
+approle = "vsd"
+security-group-name = "vpc_link_sg"
 }
 
+module "vpc_link_sg_ecs" {
+  source              = "../../components/networking/security_group"
+  security-group-name = local.security-group-name
+  vpc_id              = var.vpc_id
+  appname             = local.appname
+  appowner            = local.appowner
+  environment         = local.environment
+  deployment-id       = local.deployment-id
+  approle             = local.approle
+}
+
+module "vpc_link_sg_rule" {
+  source            = "../../components/networking/security_group_rules"
+  type              = "ingress"
+  from-port         = 80
+  to-port           = 80
+  protocol          = "tcp"
+  cidr-blocks       = ["0.0.0.0/0"]
+  security-group-id = module.vpc_link_sg_ecs.security_group_id
+  description       = "launch_config_sg_ecs_rule"
+}
 
 
 module "vpc_link" {
   source = "../../components/api_gateway/vpc_link"
-  security_group_vpc_link = aws_security_group.api-gw-sg.id
+  security_group_vpc_link = module.vpc_link_sg_ecs.security_group_id
   private_subnet_1_id = var.private_subnet_1_id
   private_subnet_2_id = var.private_subnet_2_id
 }

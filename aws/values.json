@@ -90,7 +90,7 @@
   "initvm-log-s3": "iac-madstack",
   "redshift-username": "madstackuser",
   "redshift-database-name": "madstack",
-  "enable-vpc-logs": true,
+  "enable-vpc-logs": false,
   "enable-alb-logs": true,
   "enable_eks_logging": "true",
   "enable_es_logging": "true",

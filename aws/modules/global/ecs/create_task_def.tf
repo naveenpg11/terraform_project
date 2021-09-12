@@ -3,19 +3,19 @@ resource "aws_ecs_task_definition" "task_definition" {
   requires_compatibilities = [
       "EC2"
    ]
-  cpu = "500"
-  memory = "500"
+  cpu = var.task_cpu
+  memory = var.task_memory
   container_definitions = jsonencode([
     {
-      name      = "container-api"
+      name      = "var.container_name"
       image     = var.container-image-id
-      cpu       = 200
-      memory    = 300
+      cpu       = var.container_cpu
+      memory    = var.container_memory
       essential = true
       portMappings = [
         {
-          containerPort = 8000
-          hostPort      = 8000
+          containerPort = var.container_port
+          hostPort      = var.container_port
         }
       ]
     }

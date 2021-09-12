@@ -67,21 +67,41 @@ module "vpc" {
   aws_account_id             = var.aws_account_id
   enable-vpc-logs            = var.enable-vpc-logs
   enable-alb-logs            = var.enable-alb-logs
-  vpn-ip                     = var.vpn-ip
+}
+
+
+module "load_balancer" {
+  source                     = "./modules/load_balancer"
+  vpc_id                     = module.vpc.vpc_id
+  vpc_cidr_block             = var.cidrange
+  private_subnet_1_id        = module.vpc.private_subnet_1_id
+  private_subnet_2_id        = module.vpc.private_subnet_2_id
+  client                     = var.client
+  env                        = var.env
+  locationcode               = lookup(var.locationcode, var.region)
+  appowner                   = var.appowner
+  environment                = var.environment
+  deployment-id              = var.deployment-id
+  region                     = var.region
+  enable-deletion-protection = var.enable-deletion-protection
+  aws_account_id             = var.aws_account_id
+  enable-alb-logs            = var.enable-alb-logs
 }
 
 
 module "container-task-def" {
   source                     = "./modules/global/ecs"
+  container_name             = "container-api"
   container-image-id         = var.container-image-id
 }
 
 module "ecs_service" {
   source       = "./modules/ecs_deploy"
   vpc_id       = module.vpc.vpc_id
+  vpc_cidr_block             = var.cidrange
   private_subnet_1_id         = module.vpc.private_subnet_1_id
   private_subnet_2_id         = module.vpc.private_subnet_2_id
-  target_group_arn           = module.vpc.target_group_arn
+  target_group_arn           = module.load_balancer.target_group_arn
   container_task_def_arn     = module.container-task-def.task_definition_id
 
   depends_on = [module.vpc]
@@ -90,7 +110,7 @@ module "ecs_service" {
 
 module "expose_api_https" {
   source = "./modules/gateway_http_proxy"
-  lb_dns_name = module.vpc.alb-dns_name
+  lb_dns_name = module.load_balancer.alb-dns_name
 }
 
 module "expose_api_https_private" {
@@ -98,6 +118,6 @@ module "expose_api_https_private" {
   vpc_id       = module.vpc.vpc_id
   private_subnet_1_id         = module.vpc.private_subnet_1_id
   private_subnet_2_id         = module.vpc.private_subnet_2_id
-  alb_listener_arn            = module.vpc.alb_listener_arn
+  alb_listener_arn            = module.load_balancer.alb_listener_arn
 }
 

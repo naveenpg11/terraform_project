@@ -2,6 +2,11 @@ variable "alb-name" {
   description = "ALB Name"
 }
 
+variable "internal" {
+  description = "Internal - True/False"
+}
+
+
 variable "security-group" {
   type        = list(any)
   description = "Security Group ID"

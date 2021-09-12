@@ -271,13 +271,6 @@ variable "alb-sr-approle" {
   default     = "Secrets"
 }
 
-
-variable "vpn-ip" {
-  description = "VPN IP"
-}
-
-
-
 variable "tg-port" {
   default = 8000
   description = "Target group port"

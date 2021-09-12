@@ -1,18 +1,16 @@
 
 
 resource "aws_autoscaling_group" "asg" {
-  name                      = "test-asg"
+  name                      = var.name
   launch_configuration      = var.launch_template_ecs
-  min_size                  = 1
-  max_size                  = 1
-  desired_capacity          = 1
+  min_size                  = var.min_count
+  max_size                  = var.max_count
+  desired_capacity          = var.desired_count
   health_check_type         = "ELB"
   health_check_grace_period = 300
-  vpc_zone_identifier       = module.vpc.public_subnets
+  vpc_zone_identifier       = [var.private_subnet_1_id, var.private_subnet_2_id]
+}
 
-  target_group_arns     = [aws_lb_target_group.lb_target_group.arn]
-  protect_from_scale_in = true
-  lifecycle {
-    create_before_destroy = true
-  }
+output "asg_arn" {
+    value = aws_autoscaling_group.asg.arn
 }

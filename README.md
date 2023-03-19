@@ -1,4 +1,4 @@
-# terraform_Challenge
+# terraform_practice
 
 Terraform Code to create AWS Infrastructure which:
 - Runs the container workload (we recommend ECS)
